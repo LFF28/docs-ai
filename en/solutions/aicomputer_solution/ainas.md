@@ -18,12 +18,12 @@ sidebar_position: 1
 
 | Platform & OS | Support |
 |---|---|
-| K1 Buildroot | Supported |
-| K1 OpenHarmony | Not supported |
-| K1 Bianbu LXQt/GNOME | Supported |
-| K3 Buildroot | Supported |
-| K3 OpenHarmony | Not supported |
-| K3 Bianbu LXQt/GNOME | Supported |
+| K1 Buildroot | ✅ Yes |
+| K1 OpenHarmony | ❌ No |
+| K1 Bianbu LXQt/GNOME | ✅ Yes |
+| K3 Buildroot | ✅ Yes |
+| K3 OpenHarmony | ❌ No |
+| K3 Bianbu LXQt/GNOME | ✅ Yes |
 
 ## Technical Architecture
 
@@ -44,13 +44,13 @@ The Linux SDK built with Buildroot supports SpacemiT K-series chips. It includes
 
 #### K1 Buildroot
 
-[K1 Buildroot development documentation](https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k1_buildroot)
+[K1 Buildroot development documentation](https://www.spacemit.com/community/document/info?lang=en&nodepath=software/SDK/buildroot/k1_buildroot)
 
 [K1 Buildroot source download](https://www.spacemit.com/community/resources-download/SDK/K1/Buildroot)
 
 #### K3 Buildroot
 
-[K3 Buildroot development documentation](https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot)
+[K3 Buildroot development documentation](https://www.spacemit.com/community/document/info?lang=en&nodepath=software/SDK/buildroot/k3_buildroot)
 
 [K3 Buildroot source download](https://www.spacemit.com/community/resources-download/SDK/K3/Buildroot)
 
@@ -87,11 +87,11 @@ The VPU on the SpacemiT platform is implemented based on the V4L2 framework and 
 
 ### FFmpeg User Guide
 
-[FFmpeg user guide](https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/media/ffmpeg_user_guide.md)
+[FFmpeg user guide](https://www.spacemit.com/community/document/info?lang=en&nodepath=software/SDK/buildroot/k3_buildroot/media/ffmpeg_user_guide.md)
 
 ### GStreamer User Guide
 
-[GStreamer user guide](https://www.spacemit.com/community/document/info?lang=zh&nodepath=software/SDK/buildroot/k3_buildroot/media/gstreamer_user_guide.md)
+[GStreamer user guide](https://www.spacemit.com/community/document/info?lang=en&nodepath=software/SDK/buildroot/k3_buildroot/media/gstreamer_user_guide.md)
 
 ## AI Feature Development
 
@@ -99,18 +99,18 @@ The VPU on the SpacemiT platform is implemented based on the V4L2 framework and 
 
 #### Buildroot AI Development Environment
 
-The Buildroot release has integrated llama.cpp and spacemit-onnxruntime.
+The Buildroot release has integrated `llama.cpp` and `spacemit-onnxruntime`.
 
 #### Bianbu AI Development Environment
 
-Install llama.cpp:
+Install `llama.cpp`:
 
 ```bash
 sudo apt update
 sudo apt install llama.cpp-tools-spacemit
 ```
 
-Install spacemit-onnxruntime:
+Install `spacemit-onnxruntime`:
 
 ```bash
 sudo apt-get update
@@ -119,7 +119,7 @@ sudo apt-get install -y spacemit-onnxruntime libopencv-dev python3-spacemit-ort 
 
 ### AI Features
 
-AI NAS can refer to SpacemiT's intelligent computing platform [AI SDK](https://www.spacemit.com/community/document/info?lang=zh&nodepath=ai/application_tools/ai-sdk.md) to implement the following AI features.
+AI NAS can use SpacemiT's intelligent computing platform [AI SDK](https://www.spacemit.com/community/document/info?lang=en&nodepath=ai/application_tools/ai-sdk.md) to implement the following AI features.
 
 #### Intelligent Media Library
 
@@ -155,9 +155,9 @@ AI NAS can refer to SpacemiT's intelligent computing platform [AI SDK](https://w
 
 ### Disk Identification and Device Model
 
-Do not persistently bind storage to `/dev/sda` or `/dev/nvme0n1` during development:
+It is not recommended to persistently bind storage to `/dev/sda` or `/dev/nvme0n1` during development:
 
-- Disk unique ID: prefer WWN/serial, while handling USB bridge chips that do not expose a serial number.
+- Disk unique ID: prefer WWN/serial; account for USB bridge chips that do not expose a serial number.
 - Partition ID: use PARTUUID.
 - Filesystem ID: use UUID/LABEL.
 - Web UI display: model, serial number, capacity, interface, temperature, SMART status, and RAID array membership.
@@ -176,9 +176,9 @@ Do not persistently bind storage to `/dev/sda` or `/dev/nvme0n1` during developm
 
 Recommendations:
 
-- Create MD RAID using whole raw disks or standard GPT partitions, and keep all member disks the same capacity.
+- Create MD RAID using whole raw disks or standard GPT partitions; keep all member disks at the same capacity.
 - Use RAID metadata version 1.2. Evaluate version 1.0 only for special boot partition scenarios.
-- During RAID5/6 rebuild, throttle background tasks and notify users of degraded performance.
+- During RAID5/6 rebuilds, throttle background tasks and notify users of degraded performance.
 - USB-connected data disks are not recommended for production RAID arrays.
 
 ### Filesystem Selection
@@ -213,7 +213,7 @@ Alert levels:
 
 - P0: array degraded, dual-disk errors, filesystem read-only.
 - P1: SMART failed, bad sector growth, over-temperature.
-- P2: capacity above 85%, single service exception, backup failure.
+- P2: capacity above 85%, individual service failure, backup failure.
 
 ## Network Solution Design
 
@@ -223,11 +223,11 @@ Alert levels:
 - Support IPv4/IPv6 dual stack. IPv6 does not expose the management interface to the public internet by default.
 - mDNS hostname: `nas-dev.local`.
 - Windows discovery: use wsdd2 to reduce dependency on SMB1/NetBIOS.
-- MTU defaults to 1500. Jumbo Frame can be enabled for 2.5G/10G intranets, but the entire path must use a consistent MTU.
+- MTU defaults to 1500. Jumbo Frames can be enabled for 2.5G/10G intranets, but the entire path must use a consistent MTU.
 
 ### Advanced Networking
 
-- Bonding: use active-backup for reliability. 802.3ad requires switch-side LACP.
+- Bonding: use active-backup mode for reliability. 802.3ad requires switch-side LACP.
 - VLAN: isolate enterprise or lab network segments.
 - Firewall: open only Web, SSH, SMB, NFS, rsync, and Docker mapped ports by default.
 - Service binding: restrict management services to LAN interfaces and do not listen on WAN/hotspot interfaces.
@@ -259,7 +259,7 @@ Items to evaluate:
 - TTS: first-packet latency, synthesis speed, and audio quality sampling.
 - LLM: prefill tokens/s, decode tokens/s, first-token latency, context length, and concurrency.
 - RAG: document parsing speed, vectorization speed, recall accuracy, and Q&A latency.
-- System impact: SMB/NFS throughput drop ratio, disk queue, temperature, and peak memory usage.
+- System impact: SMB/NFS throughput degradation ratio, disk queue depth, temperature, and peak memory usage.
 
 ### Storage Basic Tests
 
@@ -323,9 +323,9 @@ Items to record:
 - Performance metrics: throughput, IOPS, average latency, P95/P99/P99.9 latency.
 - Test parameters: block size, queue depth, concurrency, file size, direct I/O, and runtime.
 
-#### dd Basic Sequential Read/Write
+#### `dd` Basic Sequential Read/Write
 
-`dd` is suitable for quick smoke testing. It is usually available by default, but it provides limited metrics and cannot replace fio/iozone/vdbench.
+`dd` is suitable for quick smoke tests. It is available by default on most systems, but provides limited metrics and cannot replace fio/iozone/vdbench.
 
 Filesystem sequential write:
 
@@ -360,8 +360,8 @@ dd if=/dev/nvme0n1 of=/dev/null bs=16M count=256 iflag=direct status=progress
 
 Notes:
 
-- Do not run write tests with `of=/dev/sdX` on block devices that contain data unless the disk is explicitly disposable.
-- Some filesystems or devices do not fully support `iflag=direct`/`oflag=direct`. If the test fails, record the error and use normal reads after dropping caches.
+- Do not run write tests with `of=/dev/sdX` on block devices that contain data unless the disk is known to be disposable.
+- Some filesystems or devices do not fully support `iflag=direct`/`oflag=direct`. If the test fails, record the error and fall back to buffered reads after dropping caches.
 - Delete temporary files after testing: `rm -f /srv/pool1/test/dd_*.bin`.
 
 #### fio Comprehensive I/O Tests
@@ -442,7 +442,7 @@ Notes:
 
 - Write tests on block devices destroy data and must only be used on empty disks or dedicated test disks.
 - `--size` should be larger than memory to avoid page cache amplification.
-- Keep JSON output so that `bw_bytes`, `iops`, and `lat_ns.percentile` can be extracted automatically later.
+- Retain JSON output so that `bw_bytes`, `iops`, and `lat_ns.percentile` can be parsed automatically later.
 
 #### iozone Filesystem Tests
 
@@ -474,13 +474,13 @@ iozone -t 8 -i 0 -i 1 -i 2 -s 2G -r 1M \
 
 Metrics to watch:
 
-- Difference between initial write and rewrite, used to evaluate cache and overwrite performance.
-- Difference between read and reread, used to evaluate page cache impact.
-- IOPS and latency of random read/write at 4K/64K.
+- Difference between initial write and rewrite, used to assess cache and overwrite performance.
+- Difference between read and reread, used to assess page cache impact.
+- IOPS and latency for random read/write at 4K/64K.
 
 #### vdbench Enterprise Stress Tests
 
-vdbench is suitable for long-duration, repeatable, and descriptive storage stress tests. It is commonly used for RAID, filesystems, NAS protocols, and mixed workloads.
+vdbench is suited for long-duration, repeatable, and well-described storage stress tests. It is commonly used for RAID, filesystem, NAS protocol, and mixed-workload validation.
 
 Block device read-only configuration `vdbench_block_read.conf`:
 
@@ -517,11 +517,11 @@ Notes:
 
 - vdbench requires a Java runtime.
 - Block device writes also destroy data. Production tests should prefer filesystem mode.
-- Long-duration stability tests should run for at least 1 to 24 hours and monitor temperature, SMART, RAID, and dmesg.
+- Long-duration stability tests should run for at least 1–24 hours while monitoring temperature, SMART status, RAID state, and dmesg.
 
 ### Network Throughput Tests
 
-NAS network tests should cover TCP throughput, UDP packet loss/jitter, request-response latency, multi-connection concurrency, long-duration stability, and protocol stack CPU usage. Before testing, confirm link speed, duplex mode, MTU, and offload status:
+NAS network tests should cover TCP throughput, UDP packet loss/jitter, request-response latency, multi-connection concurrency, long-duration stability, and protocol-stack CPU usage. Before testing, confirm link speed, duplex mode, MTU, and offload status:
 
 ```bash
 ip -br addr
@@ -533,7 +533,7 @@ ss -tulpn
 
 #### iperf3 Test Method
 
-iperf3 is the preferred tool for TCP/UDP throughput, reverse, bidirectional, and multi-stream tests in NAS network validation.
+iperf3 is the preferred tool for TCP/UDP throughput, reverse, bidirectional, and multi-stream testing in NAS network validation.
 
 Server:
 
@@ -649,8 +649,8 @@ wait
 
 Metrics to watch:
 
-- `Throughput`: throughput capability.
-- `Trans/s`: request-response transaction rate, suitable for small-packet RPC/metadata scenarios.
+- `Throughput`: measured throughput.
+- `Trans/s`: request-response transaction rate; relevant for small-packet RPC and metadata-intensive scenarios.
 - CPU usage and soft interrupts: `mpstat`, `top`, `/proc/interrupts`.
 
 #### Recommended Network Test Matrix
@@ -668,9 +668,9 @@ Metrics to watch:
 
 Acceptance recommendations:
 
-- 1GbE: single-direction TCP should approach line rate, with no packet loss or disconnection in long-duration tests.
-- 2.5GbE/10GbE: record CPU soft interrupt usage and identify whether the bottleneck is in the network, storage, or protocol stack.
-- Jumbo Frame: test both MTU 1500 and 9000. Enable it by default only when the entire path is stable.
+- 1GbE: single-direction TCP should approach line rate, with no packet loss or disconnection during long-duration tests.
+- 2.5GbE/10GbE: record CPU soft-interrupt usage and identify whether the bottleneck lies in the network, storage, or protocol stack.
+- Jumbo Frames: test both MTU 1500 and 9000. Enable by default only when the entire path is confirmed stable.
 - Network test reports should record link speed, MTU, client configuration, switch model, test direction, concurrency, CPU usage, packet loss, and retransmissions.
 
 ### SMB/NFS Protocol Tests
@@ -717,7 +717,7 @@ Test points:
 
 ### inswapper Porting Example
 
-Based on InsightFace `inswapper_128.onnx`, this is a face swap model. This section describes porting inswapper to the Bianbu 4.0 system AI SDK.
+`inswapper_128.onnx` is an InsightFace face-swapping model. This section describes porting inswapper to the AI SDK on the Bianbu 4.0 system.
 
 The implementation includes:
 
@@ -838,7 +838,7 @@ inswapper vision/examples/inswapper/config/inswapper_xslim_int8_spacemit.yaml \
 
 ### Jellyfin Porting Example
 
-Jellyfin is an open-source media server that supports movies, TV shows, music, books, photos, and other media types. It supports access from multiple client types and supports multi-user accounts. Jellyfin does not provide official RISC-V prebuilt packages, so this section describes porting Jellyfin version v10.11.11 based on the Bianbu 4.0 system.
+Jellyfin is an open-source media server that supports movies, TV shows, music, books, photos, and other media types. It supports multiple client platforms and multi-user accounts. Jellyfin does not provide official RISC-V prebuilt packages, so this section describes porting Jellyfin v10.11.11 to the Bianbu 4.0 system.
 
 Download the prebuilt dotnet package for riscv64:
 
@@ -896,7 +896,7 @@ sudo systemctl start jellyfin
 
 ### OpenMediaVault
 
-OpenMediaVault (OMV) is an open-source network attached storage (NAS) system based on Debian Linux, developed and maintained by Volker Theile. It is designed for home and small office NAS environments and manages storage and network services through a Web interface.
+OpenMediaVault (OMV) is an open-source NAS system based on Debian Linux, developed and maintained by Volker Theile. It is designed for home and small-office environments and manages storage and network services through a web interface.
 
 [Source repository](https://github.com/openmediavault/openmediavault)
 
@@ -908,7 +908,7 @@ OpenMediaVault ported based on the Bianbu system:
 
 ### CasaOS
 
-CasaOS is an open-source personal cloud system developed by IceWhale Technology. It is positioned as a lighter and easier-to-use home cloud platform than OMV.
+CasaOS is an open-source personal cloud system developed by IceWhale Technology, positioned as a lighter and more user-friendly home cloud platform than OMV.
 
 [Source repository](https://github.com/IceWhaleTech/CasaOS)
 
@@ -922,4 +922,4 @@ CasaOS ported based on the Bianbu system:
 
 - **Official documentation**: https://www.spacemit.com/community/document
 - **Developer community**: https://www.spacemit.com/community
-- **Issue feedback**: submit through the community forum or GitLab Issues
+- **Issue feedback**: submit via the community forum or GitLab Issues
