@@ -892,6 +892,81 @@ Start Jellyfin server:
 sudo systemctl start jellyfin
 ```
 
+### Build Docker
+
+Directory structure
+
+```bash
+/opt/jellyfin/docker/
+├── Dockerfile
+├── .dockerignore
+├── dotnet/          # .NET 9 runtime (shared/ + host/ + dotnet binary)
+├── bin/             # Jellyfin server binaries
+└── web/             # Jellyfin web frontend
+```
+
+Dockerfile
+
+```dockerfile
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Base runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ca-certificates \
+  libicu74 \
+  libssl3 \
+  libfontconfig1 \
+  libfreetype6 \
+  ffmpeg \
+  && rm -rf /var/lib/apt/lists/*
+
+# Create runtime user
+RUN groupadd -r jellyfin && useradd -r -g jellyfin -s /bin/false jellyfin
+
+# Copy .NET 9 runtime (only shared/host and the dotnet binary)
+COPY dotnet/shared /opt/dotnet/shared
+COPY dotnet/host /opt/dotnet/host
+COPY dotnet/dotnet /opt/dotnet/dotnet
+
+# Copy Jellyfin server and web
+COPY bin/ /opt/jellyfin/bin/
+COPY web/ /opt/jellyfin/web/
+
+# Create data dirs and set permissions
+RUN mkdir -p \
+  /var/lib/jellyfin \
+  /var/cache/jellyfin \
+  /var/log/jellyfin \
+  /etc/jellyfin \
+  && chown -R jellyfin:jellyfin \
+  /var/lib/jellyfin \
+  /var/cache/jellyfin \
+  /var/log/jellyfin \
+  /etc/jellyfin \
+  /opt/jellyfin \
+  /opt/dotnet
+
+ENV DOTNET_ROOT=/opt/dotnet
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+ENV DOTNET_NOLOGO=1
+ENV ASPNETCORE_URLS=http://+:8096
+
+EXPOSE 8096
+
+VOLUME ["/var/lib/jellyfin", "/var/cache/jellyfin", "/var/log/jellyfin", "/etc/jellyfin"]
+
+USER jellyfin
+
+ENTRYPOINT ["/opt/dotnet/dotnet", "/opt/jellyfin/bin/jellyfin.dll", \
+  "--datadir", "/var/lib/jellyfin", \
+  "--cachedir", "/var/cache/jellyfin", \
+  "--logdir", "/var/log/jellyfin", \
+  "--configdir", "/etc/jellyfin", \
+  "--webdir", "/opt/jellyfin/web"]
+```
+
 ## Open-Source NAS Systems
 
 ### OpenMediaVault
