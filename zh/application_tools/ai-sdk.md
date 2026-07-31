@@ -163,12 +163,79 @@ wget https://archive.spacemit.com/spacemit-ai/model_zoo/assets/audio/001_zh_dail
 
 更多音频资源可在 [音频资源目录](https://archive.spacemit.com/spacemit-ai/model_zoo/assets/audio) 按需下载。
 
-**步骤2：运行示例**
+**步骤2：运行默认 SenseVoice 示例**
 
 ```bash
 # 识别 wav 文件（示例）
 asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav
 ```
+
+**Qwen3-ASR 1.7B**
+
+先安装 `llama-server` 并下载模型：
+
+```bash
+sudo apt install llama.cpp-tools-spacemit
+
+mkdir -p ~/.cache/models/asr
+cd ~/.cache/models/asr
+wget https://archive.spacemit.com/spacemit-ai/model_zoo/asr/qwen3-asr-1.7B-dynq-q40.tar.gz
+tar -xzf qwen3-asr-1.7B-dynq-q40.tar.gz
+```
+
+启动服务：
+
+```bash
+MODEL_DIR=~/.cache/models/asr/qwen3-asr-1.7B-dynq-q40
+
+SPACEMIT_EP_INTRA_THREAD_NUM=4 llama-server \
+    -m "$MODEL_DIR/Qwen3-ASR-1.7B-text-q40.gguf" \
+    --media-backend smt \
+    --smt-config-dir "$MODEL_DIR" \
+    --alias qwen3-asr \
+    --host 127.0.0.1 --port 8063 \
+    -t 8 -tb 8 -c 4096
+```
+
+在另一个终端调用：
+
+```bash
+asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav \
+    --engine qwen3-asr \
+    --endpoint http://127.0.0.1:8063/v1/chat/completions
+```
+
+**Fun-ASR Nano**
+
+同一端口只能运行一个模型服务。停止前面的 Qwen3-ASR 服务后，下载并启动 Fun-ASR：
+
+```bash
+cd ~/.cache/models/asr
+wget https://archive.spacemit.com/spacemit-ai/model_zoo/asr/fun-asr-nano-2512-qq-q4km.tar.gz
+tar -xzf fun-asr-nano-2512-qq-q4km.tar.gz
+
+MODEL_DIR=~/.cache/models/asr/fun-asr-nano-2512-qq-q4km
+
+SPACEMIT_EP_INTRA_THREAD_NUM=4 llama-server \
+    -m "$MODEL_DIR/qwen3-0.6b-q4km.gguf" \
+    --media-backend smt \
+    --smt-config-dir "$MODEL_DIR" \
+    --alias funasr \
+    --host 127.0.0.1 --port 8063 \
+    -t 4 -tb 4 -c 4096 \
+    --warmup --jinja
+```
+
+在另一个终端调用 transcription 接口：
+
+```bash
+asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav \
+    --engine funasr \
+    --endpoint http://127.0.0.1:8063/v1/audio/transcriptions \
+    --model funasr
+```
+
+完整参数和应用开发接口参见 [model-zoo-asr README](https://github.com/spacemit-com/model-zoo-asr/blob/main/README.md)。
 
 ### 3.3 TTS
 
