@@ -158,6 +158,7 @@ For optional parameters such as `--image`, `--video`, `--use-camera`, `--output`
 mkdir -p ~/.cache/models/assets/audio
 cd ~/.cache/models/assets/audio
 wget https://archive.spacemit.com/spacemit-ai/model_zoo/assets/audio/001_zh_daily_weather.wav
+wget https://archive.spacemit.com/spacemit-ai/model_zoo/assets/audio/024_ja_funasr_sample.mp3
 ```
 
 Additional audio assets are available in the [audio asset directory](https://archive.spacemit.com/spacemit-ai/model_zoo/assets/audio).
@@ -234,6 +235,54 @@ asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav \
     --endpoint http://127.0.0.1:8063/v1/audio/transcriptions \
     --model funasr
 ```
+
+**Gemma4 ASR**
+
+Gemma4 ASR supports transcription in the source language and translation of
+foreign-language speech into English. It requires ASR component version 1.0.4 or
+later; Python users should install `spacemit-asr >= 1.0.4`. The server requires
+`llama.cpp-tools-spacemit >= 0.1.7`. If version 0.1.7 is not yet available from
+the system package repository, use the
+[llama.cpp 0.1.7 release package](https://github.com/spacemit-com/llama.cpp/releases/tag/v0.1.7).
+
+Stop any other model service using port 8063, then download the model and start
+the service:
+
+```bash
+cd ~/.cache/models/asr
+wget https://archive.spacemit.com/spacemit-ai/model_zoo/asr/gemma4-asr-E2B-q40.tar.gz
+tar -xzf gemma4-asr-E2B-q40.tar.gz
+
+MODEL_DIR=~/.cache/models/asr/gemma4-asr-E2B-q40
+
+llama-server \
+    -m "$MODEL_DIR/gemma-4-E2B-it-Q4_0-plproj-Q4_0-combined.gguf" \
+    --media-backend smt \
+    --smt-config-dir "$MODEL_DIR" \
+    --alias gemma4-asr \
+    --host 127.0.0.1 --port 8063 \
+    -t 8 -tb 8 -c 4096 \
+    --warmup --jinja --reasoning off \
+    --no-cache-prompt
+```
+
+`--reasoning off` makes the service return the final transcript or translation
+directly. Run either command in another terminal:
+
+```bash
+# Transcribe in the source language
+asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav \
+    --engine gemma4-asr --task transcribe
+
+# Translate foreign-language speech into English
+asr_file_demo ~/.cache/models/assets/audio/024_ja_funasr_sample.mp3 \
+    --engine gemma4-asr --task translate
+```
+
+Gemma4 ASR returns a result after receiving the complete audio input and does
+not provide model-native stateful streaming recognition. The first audio request
+after startup also initializes the dynamic ONNX encoder session, so use later
+requests for performance measurements.
 
 For the complete command-line options and application API, see the [model-zoo-asr README](https://github.com/spacemit-com/model-zoo-asr/blob/main/README.md).
 
