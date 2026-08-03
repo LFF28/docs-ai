@@ -159,16 +159,126 @@ ocsort vision/examples/ocsort/config/ocsort.yaml
 mkdir -p ~/.cache/models/assets/audio
 cd ~/.cache/models/assets/audio
 wget https://archive.spacemit.com/spacemit-ai/model_zoo/assets/audio/001_zh_daily_weather.wav
+wget https://archive.spacemit.com/spacemit-ai/model_zoo/assets/audio/024_ja_funasr_sample.mp3
 ```
 
 更多音频资源可在 [音频资源目录](https://archive.spacemit.com/spacemit-ai/model_zoo/assets/audio) 按需下载。
 
-**步骤2：运行示例**
+**步骤2：运行默认 SenseVoice 示例**
 
 ```bash
 # 识别 wav 文件（示例）
 asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav
 ```
+
+**Qwen3-ASR 1.7B**
+
+先安装 `llama-server` 并下载模型：
+
+```bash
+sudo apt install llama.cpp-tools-spacemit
+
+mkdir -p ~/.cache/models/asr
+cd ~/.cache/models/asr
+wget https://archive.spacemit.com/spacemit-ai/model_zoo/asr/qwen3-asr-1.7B-dynq-q40.tar.gz
+tar -xzf qwen3-asr-1.7B-dynq-q40.tar.gz
+```
+
+启动服务：
+
+```bash
+MODEL_DIR=~/.cache/models/asr/qwen3-asr-1.7B-dynq-q40
+
+SPACEMIT_EP_INTRA_THREAD_NUM=4 llama-server \
+    -m "$MODEL_DIR/Qwen3-ASR-1.7B-text-q40.gguf" \
+    --media-backend smt \
+    --smt-config-dir "$MODEL_DIR" \
+    --alias qwen3-asr \
+    --host 127.0.0.1 --port 8063 \
+    -t 8 -tb 8 -c 4096
+```
+
+在另一个终端调用：
+
+```bash
+asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav \
+    --engine qwen3-asr \
+    --endpoint http://127.0.0.1:8063/v1/chat/completions
+```
+
+**Fun-ASR Nano**
+
+同一端口只能运行一个模型服务。停止前面的 Qwen3-ASR 服务后，下载并启动 Fun-ASR：
+
+```bash
+cd ~/.cache/models/asr
+wget https://archive.spacemit.com/spacemit-ai/model_zoo/asr/fun-asr-nano-2512-qq-q4km.tar.gz
+tar -xzf fun-asr-nano-2512-qq-q4km.tar.gz
+
+MODEL_DIR=~/.cache/models/asr/fun-asr-nano-2512-qq-q4km
+
+SPACEMIT_EP_INTRA_THREAD_NUM=4 llama-server \
+    -m "$MODEL_DIR/qwen3-0.6b-q4km.gguf" \
+    --media-backend smt \
+    --smt-config-dir "$MODEL_DIR" \
+    --alias funasr \
+    --host 127.0.0.1 --port 8063 \
+    -t 4 -tb 4 -c 4096 \
+    --warmup --jinja
+```
+
+在另一个终端调用 transcription 接口：
+
+```bash
+asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav \
+    --engine funasr \
+    --endpoint http://127.0.0.1:8063/v1/audio/transcriptions \
+    --model funasr
+```
+
+**Gemma4 ASR**
+
+Gemma4 ASR 支持原语言转写，以及将外语语音翻译为英文。ASR 组件需为 1.0.4
+或更新版本；使用 Python 时对应安装 `spacemit-asr >= 1.0.4`。服务端需使用
+`llama.cpp-tools-spacemit >= 0.1.7`。如果系统软件源尚未提供 0.1.7，可使用
+[llama.cpp 0.1.7 release 包](https://github.com/spacemit-com/llama.cpp/releases/tag/v0.1.7)。
+
+停止占用 8063 端口的其他模型服务后，下载模型并启动服务：
+
+```bash
+cd ~/.cache/models/asr
+wget https://archive.spacemit.com/spacemit-ai/model_zoo/asr/gemma4-asr-E2B-q40.tar.gz
+tar -xzf gemma4-asr-E2B-q40.tar.gz
+
+MODEL_DIR=~/.cache/models/asr/gemma4-asr-E2B-q40
+
+llama-server \
+    -m "$MODEL_DIR/gemma-4-E2B-it-Q4_0-plproj-Q4_0-combined.gguf" \
+    --media-backend smt \
+    --smt-config-dir "$MODEL_DIR" \
+    --alias gemma4-asr \
+    --host 127.0.0.1 --port 8063 \
+    -t 8 -tb 8 -c 4096 \
+    --warmup --jinja --reasoning off \
+    --no-cache-prompt
+```
+
+`--reasoning off` 用于确保服务直接返回最终转写或译文。另一个终端可分别执行：
+
+```bash
+# 原语言转写
+asr_file_demo ~/.cache/models/assets/audio/001_zh_daily_weather.wav \
+    --engine gemma4-asr --task transcribe
+
+# 外语语音翻译为英文
+asr_file_demo ~/.cache/models/assets/audio/024_ja_funasr_sample.mp3 \
+    --engine gemma4-asr --task translate
+```
+
+Gemma4 ASR 需要收到完整音频后再返回结果，不支持模型原生的有状态流式识别。
+服务启动后的首个音频请求还会初始化动态 ONNX encoder session，性能评估应使用后续请求。
+
+完整参数和应用开发接口参见 [model-zoo-asr README](https://github.com/spacemit-com/model-zoo-asr/blob/main/README.md)。
 
 ### 3.3 TTS
 
