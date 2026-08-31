@@ -102,7 +102,16 @@ sudo apt install yolo-demo
 
 ### 方式二：源码安装（开发者）
 
-安装常规构建依赖：
+下载源码：
+
+```bash
+# ssh 下载，需要配置 ssh 密钥
+git clone git@github.com:spacemit-com/multi-stream-vision.git
+# http 下载
+git clone https://github.com/spacemit-com/multi-stream-vision.git
+```
+
+安装依赖：
 
 ```bash
 sudo apt install -y \
@@ -185,6 +194,14 @@ yolo-demo
 | 火焰检测 | YOLOv8 Fire |
 | 姿态估计 | YOLOv8 Nano Pose、YOLOv8 Small Pose |
 | 实例分割 | YOLOv8 Nano Seg、YOLOv8 Small Seg |
+
+应用内置三个模型：yolov8m.q.onnx、yolov8n.q.onnx、yolov8s.q.onnx，即 YOLOv8 Nano/Small/Medium。
+
+其他模型可以从`https://archive.spacemit.com/spacemit-ai/model_zoo/vision/`获取或通过下载脚本下载到指定目录：
+
+```bash
+sudo ./scripts/download_models.sh /usr/share/yolo-demo
+```
 
 > ⚠️ **重要提示**：切换模型前应确认对应 ONNX 模型已经安装在 `/usr/share/yolo-demo` 下。较大的模型通常具有更高精度，但会降低多路总帧率。
 
