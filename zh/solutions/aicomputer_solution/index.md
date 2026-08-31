@@ -76,3 +76,9 @@ sidebar_position: 2
 **DeepSeek Harness** 是 DeepSeek 开源的智能体运行框架。它提供 Web 交互界面，可连接云端模型完成代码生成、文件编辑、命令执行和问题修复等任务。
 
 - [DeepSeek Harness](ds_harness.md)
+
+## 多路视频分析(YOLO Demo)
+
+**多路视频分析（YOLO Demo）** 是一个实时视频分析应用。可同时处理 4、9 或 12 路视频，利用 K3 的 VPU、GPU 和 AI 推理能力完成视频解码、图像前处理、YOLO 推理与结果展示。
+
+- [多路视频分析(YOLO Demo)](multi_stream_vision.md)

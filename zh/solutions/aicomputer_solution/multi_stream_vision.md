@@ -1,4 +1,4 @@
-sidebar_position: 3
+sidebar_position: 11
 
 # 多路视频分析（YOLO Demo）
 
