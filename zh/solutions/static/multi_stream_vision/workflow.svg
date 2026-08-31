@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1000" viewBox="0 0 1800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">多路视频分析工作流程</title>
+  <desc id="desc">本地视频与暂未支持的网络视频流进入 MPP/VPU 解码，经多路 Pipeline 分成显示和 AI 两条处理轨道，最后汇入 Qt5 用户界面输出叠加画面和运行统计。</desc>
+  <defs>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#63778C"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#3D82C4"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#D05C65"/>
+    </marker>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2C91AD"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#795FB3"/>
+    </marker>
+    <style>
+      .title { font: 600 40px "Microsoft YaHei", "Noto Sans SC", sans-serif; fill: #20334A; }
+      .subtitle { font: 400 16px "Segoe UI", sans-serif; fill: #738399; letter-spacing: 2px; }
+      .phase-num { font: 600 16px "Segoe UI", sans-serif; fill: #FFFFFF; text-anchor: middle; dominant-baseline: middle; }
+      .phase { font: 600 19px "Microsoft YaHei", "Noto Sans SC", sans-serif; fill: #34465A; }
+      .node-main { font: 600 18px "Microsoft YaHei", "Noto Sans SC", sans-serif; fill: #263A50; text-anchor: middle; }
+      .node-sub { font: 400 14px "Microsoft YaHei", "Noto Sans SC", sans-serif; fill: #6A7B8E; text-anchor: middle; }
+      .inside { font: 600 18px "Microsoft YaHei", "Noto Sans SC", sans-serif; fill: #FFFFFF; text-anchor: middle; }
+      .inside-sub { font: 400 13px "Microsoft YaHei", "Noto Sans SC", sans-serif; fill: #FFFFFF; text-anchor: middle; opacity: 0.9; }
+      .lane-title { font: 600 18px "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+      .step-index { font: 600 18px "Segoe UI", sans-serif; fill: #FFFFFF; text-anchor: middle; dominant-baseline: middle; }
+      .legend { font: 400 14px "Microsoft YaHei", "Noto Sans SC", sans-serif; fill: #66788C; }
+      .flow { fill: none; stroke: #63778C; stroke-width: 3; marker-end: url(#arrow-gray); }
+      .local-flow { fill: none; stroke: #3D82C4; stroke-width: 3; marker-end: url(#arrow-blue); }
+      .network-flow { fill: none; stroke: #D05C65; stroke-width: 3; stroke-dasharray: 11 9; marker-end: url(#arrow-red); }
+      .display-flow { fill: none; stroke: #2C91AD; stroke-width: 4; marker-end: url(#arrow-cyan); }
+      .ai-flow { fill: none; stroke: #795FB3; stroke-width: 4; marker-end: url(#arrow-purple); }
+    </style>
+  </defs>
+
+  <rect width="1800" height="1000" fill="#F8FAFD"/>
+  <text x="900" y="64" class="title" text-anchor="middle">多路视频分析工作流程</text>
+  <text x="900" y="94" class="subtitle" text-anchor="middle">INPUT · MPP DECODE · PARALLEL PROCESSING · OUTPUT</text>
+
+  <!-- 阶段标题：仅使用扁平标识和分隔线 -->
+  <circle cx="92" cy="145" r="18" fill="#3D82C4"/>
+  <text x="92" y="146" class="phase-num">01</text>
+  <text x="122" y="152" class="phase">视频输入</text>
+  <line x1="70" y1="175" x2="290" y2="175" stroke="#3D82C4" stroke-width="4"/>
+
+  <circle cx="352" cy="145" r="18" fill="#4F9A6D"/>
+  <text x="352" y="146" class="phase-num">02</text>
+  <text x="382" y="152" class="phase">硬件解码</text>
+  <line x1="330" y1="175" x2="585" y2="175" stroke="#4F9A6D" stroke-width="4"/>
+
+  <circle cx="652" cy="145" r="18" fill="#795FB3"/>
+  <text x="652" y="146" class="phase-num">03</text>
+  <text x="682" y="152" class="phase">双通路并行处理</text>
+  <line x1="630" y1="175" x2="1485" y2="175" stroke="#795FB3" stroke-width="4"/>
+
+  <circle cx="1548" cy="145" r="18" fill="#D59A29"/>
+  <text x="1548" y="146" class="phase-num">04</text>
+  <text x="1578" y="152" class="phase">结果呈现</text>
+  <line x1="1525" y1="175" x2="1730" y2="175" stroke="#D59A29" stroke-width="4"/>
+
+  <!-- 主流程连线（绘制在节点下方） -->
+  <path d="M208 326 H275 V430 H327" class="local-flow"/>
+  <path d="M208 658 H260 V535 H327" class="network-flow"/>
+  <path d="M573 480 H625" class="flow"/>
+
+  <!-- Pipeline 分流至两条轨道 -->
+  <path d="M720 395 V300 H862" class="display-flow"/>
+  <path d="M720 565 V650 H832" class="ai-flow"/>
+
+  <!-- 显示轨道 -->
+  <path d="M918 300 H1122" class="display-flow"/>
+  <path d="M1178 300 H1382" class="display-flow"/>
+  <path d="M1438 300 H1515 V420 H1550" class="display-flow"/>
+
+  <!-- AI 轨道 -->
+  <path d="M888 650 H1012" class="ai-flow"/>
+  <path d="M1068 650 H1192" class="ai-flow"/>
+  <path d="M1248 650 H1372" class="ai-flow"/>
+  <path d="M1428 650 H1515 V540 H1550" class="ai-flow"/>
+
+  <!-- 输入节点：图形化而非卡片 -->
+  <circle cx="150" cy="326" r="58" fill="#3D82C4"/>
+  <path d="M132 294 H158 L172 308 V357 H132 Z M158 294 V309 H172" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="141" y1="323" x2="162" y2="323" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="141" y1="335" x2="162" y2="335" stroke="#FFFFFF" stroke-width="3"/>
+  <text x="150" y="410" class="node-main">本地视频文件</text>
+  <text x="150" y="436" class="node-sub">MP4 / TS / FLV</text>
+
+  <circle cx="150" cy="658" r="58" fill="#FFF8F8" stroke="#D05C65" stroke-width="3" stroke-dasharray="11 9"/>
+  <circle cx="150" cy="658" r="7" fill="#D05C65"/>
+  <path d="M132 642 A24 24 0 0 1 132 674 M119 629 A42 42 0 0 1 119 687 M168 642 A24 24 0 0 0 168 674 M181 629 A42 42 0 0 0 181 687" fill="none" stroke="#D05C65" stroke-width="3" stroke-linecap="round"/>
+  <text x="150" y="742" class="node-main">网络视频流</text>
+  <text x="150" y="768" class="node-sub">RTSP / RTMP / HTTP</text>
+  <text x="150" y="795" class="node-sub" fill="#A94A52">暂未支持</text>
+
+  <!-- MPP / VPU 解码节点 -->
+  <polygon points="380,400 520,400 580,480 520,560 380,560 320,480" fill="#4F9A6D"/>
+  <rect x="417" y="428" width="66" height="46" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="428" y1="416" x2="428" y2="428" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="450" y1="416" x2="450" y2="428" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="472" y1="416" x2="472" y2="428" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="428" y1="474" x2="428" y2="486" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="450" y1="474" x2="450" y2="486" stroke="#FFFFFF" stroke-width="3"/>
+  <line x1="472" y1="474" x2="472" y2="486" stroke="#FFFFFF" stroke-width="3"/>
+  <text x="450" y="520" class="inside">MPP / VPU</text>
+  <text x="450" y="542" class="inside-sub">解封装 · 解码 · 缩放</text>
+  <text x="450" y="590" class="node-sub">640×360 NV12 dma-buf</text>
+
+  <!-- Pipeline 分流节点 -->
+  <polygon points="720,390 810,480 720,570 630,480" fill="#526B86"/>
+  <circle cx="720" cy="451" r="8" fill="#FFFFFF"/>
+  <circle cx="692" cy="489" r="8" fill="#FFFFFF"/>
+  <circle cx="748" cy="489" r="8" fill="#FFFFFF"/>
+  <path d="M720 459 V472 M720 472 L692 481 M720 472 L748 481" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  <text x="720" y="525" class="inside">Pipeline × N</text>
+  <text x="720" y="600" class="node-sub">逐通道帧入口与任务分发</text>
+
+  <!-- 显示通路：圆形节点与流程轨道 -->
+  <text x="860" y="228" class="lane-title" fill="#277D98">视频显示通路</text>
+  <line x1="860" y1="248" x2="1450" y2="248" stroke="#B9DDE7" stroke-width="2"/>
+
+  <circle cx="890" cy="300" r="48" fill="#2C91AD"/>
+  <text x="890" y="301" class="step-index">1</text>
+  <text x="890" y="374" class="node-main">显示限帧</text>
+  <text x="890" y="399" class="node-sub">latest-only</text>
+
+  <circle cx="1150" cy="300" r="48" fill="#2C91AD"/>
+  <text x="1150" y="301" class="step-index">2</text>
+  <text x="1150" y="374" class="node-main">OpenGL 渲染</text>
+  <text x="1150" y="399" class="node-sub">上传 Y / UV 纹理</text>
+
+  <circle cx="1410" cy="300" r="48" fill="#2C91AD"/>
+  <text x="1410" y="301" class="step-index">3</text>
+  <text x="1410" y="374" class="node-main">多路视频网格</text>
+  <text x="1410" y="399" class="node-sub">4 / 9 / 12 路</text>
+
+  <!-- AI 分析通路 -->
+  <text x="830" y="575" class="lane-title" fill="#66489F">AI 分析通路</text>
+  <line x1="830" y1="595" x2="1470" y2="595" stroke="#D8CEEE" stroke-width="2"/>
+
+  <circle cx="860" cy="650" r="48" fill="#795FB3"/>
+  <text x="860" y="651" class="step-index">1</text>
+  <text x="860" y="724" class="node-main">最新帧队列</text>
+  <text x="860" y="749" class="node-sub">避免延迟堆积</text>
+
+  <circle cx="1040" cy="650" r="48" fill="#795FB3"/>
+  <text x="1040" y="651" class="step-index">2</text>
+  <text x="1040" y="724" class="node-main">OpenCL 前处理</text>
+  <text x="1040" y="749" class="node-sub">色彩转换 · Letterbox</text>
+  <text x="1040" y="772" class="node-sub">归一化 · NCHW</text>
+
+  <circle cx="1220" cy="650" r="48" fill="#795FB3"/>
+  <text x="1220" y="651" class="step-index">3</text>
+  <text x="1220" y="724" class="node-main">ORT + SpaceMIT EP</text>
+  <text x="1220" y="749" class="node-sub">8 个 Session · 8 块 TCM</text>
+
+  <circle cx="1400" cy="650" r="48" fill="#795FB3"/>
+  <text x="1400" y="651" class="step-index">4</text>
+  <text x="1400" y="724" class="node-main">模型后处理</text>
+  <text x="1400" y="749" class="node-sub">阈值过滤 · NMS · 坐标还原</text>
+
+  <!-- 结果汇聚与输出 -->
+  <circle cx="1620" cy="480" r="72" fill="#D59A29"/>
+  <path d="M1588 447 H1652 V493 H1588 Z M1588 497 H1652 M1603 513 H1637" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+  <text x="1620" y="575" class="node-main">Qt5 用户界面</text>
+  <text x="1620" y="600" class="node-sub">视频帧、分析结果与性能数据汇总</text>
+
+  <path d="M1620 552 V810 H1550" class="flow"/>
+  <path d="M1620 552 V810 H1690" class="flow"/>
+
+  <circle cx="1515" cy="810" r="35" fill="#E5B95E"/>
+  <path d="M1497 810 L1508 821 L1534 794" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1515" y="872" class="node-main">结果叠加显示</text>
+  <text x="1515" y="897" class="node-sub">检测框 · 关键点 · 实例分割</text>
+
+  <circle cx="1690" cy="810" r="35" fill="#E5B95E"/>
+  <path d="M1672 824 V809 M1684 824 V797 M1696 824 V814 M1708 824 V788" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+  <text x="1690" y="872" class="node-main">逐通道运行统计</text>
+  <text x="1690" y="897" class="node-sub">FPS · 检测数 · 延迟</text>
+
+  <!-- 图例 -->
+  <line x1="90" y1="942" x2="142" y2="942" stroke="#63778C" stroke-width="3"/>
+  <text x="157" y="948" class="legend">实线：当前已实现</text>
+  <line x1="330" y1="942" x2="382" y2="942" stroke="#D05C65" stroke-width="3" stroke-dasharray="11 9"/>
+  <text x="397" y="948" class="legend" fill="#A94A52">虚线：网络流接入暂未支持，接入后同样进入 MPP</text>
+</svg>
