@@ -57,3 +57,15 @@ sidebar_position: 2
 **Hermes** is an open-source autonomous AI agent developed by Nous Research and released as open source in February 2026. It can run on the SpacemiT K-series platform.
 
 - [Hermes](hermes.md)
+
+## DeepSeek Harness
+
+**DeepSeek Harness** is an open-source agent runtime framework from DeepSeek. It provides a web interface that connects to cloud models for code generation, file editing, command execution, and problem fixing.
+
+- [DeepSeek Harness](ds_harness.md)
+
+## Multi-Stream Video Analysis (YOLO Demo)
+
+**Multi-Stream Video Analysis (YOLO Demo)** is a real-time video analytics application. It processes 4, 9, or 12 video streams simultaneously, using the K3 VPU, GPU, and AI inference capabilities for video decoding, image preprocessing, YOLO inference, and result display.
+
+- [Multi-Stream Video Analysis (YOLO Demo)](multi_stream_vision.md)
